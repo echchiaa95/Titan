@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titan Fitness Club – Build The Strongest Version Of Yourself</title>
+<meta name="description" content="Titan Fitness Club – Elite gym experience in Morocco. Transform your body, mindset and discipline. Join for 2999 MAD.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  :root {
+    --black: #080808;
+    --dark: #111111;
+    --dark2: #1a1a1a;
+    --gray: #2a2a2a;
+    --silver: #8a8a8a;
+    --white: #f0f0f0;
+    --red: #e8001e;
+    --red-glow: rgba(232,0,30,0.35);
+    --red-dim: rgba(232,0,30,0.12);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--red);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s;
+    mix-blend-mode: normal;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(232,0,30,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: all 0.15s ease;
+  }
+
+  /* Loader */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--black);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+  .loader-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px,8vw,80px);
+    letter-spacing: 8px;
+    color: var(--white);
+    opacity: 0;
+  }
+  .loader-bar-wrap {
+    width: 200px;
+    height: 1px;
+    background: var(--gray);
+    overflow: hidden;
+  }
+  .loader-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--red);
+    transition: width 1.6s ease;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 5%;
+    background: linear-gradient(to bottom, rgba(8,8,8,0.9), transparent);
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 4px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--red); }
+  .nav-cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-nav {
+    padding: 10px 24px;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .btn-nav:hover { background: #ff0022; box-shadow: 0 0 24px var(--red-glow); }
+
+  /* Hero */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  /* YouTube BG */
+  .yt-bg-wrap {
+    position: absolute; inset: 0; z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .yt-bg-wrap iframe {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 177.78vh; /* 16:9 */
+    height: 100vh;
+    min-width: 100%;
+    min-height: 56.25vw;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    filter: brightness(0.38) saturate(0.7);
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(8,8,8,0.75) 0%, rgba(8,8,8,0.25) 55%, rgba(8,8,8,0.65) 100%);
+    z-index: 1;
+  }
+  .hero-noise {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    z-index: 2; opacity: 0.4; pointer-events: none;
+  }
+  .hero-fallback {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(232,0,30,0.08) 0%, transparent 70%),
+      linear-gradient(160deg, #0d0d0d 0%, #080808 50%, #0a0a0a 100%);
+    z-index: 0;
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 1;
+    background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  /* ── Video Showcase Section ── */
+  #video-showcase {
+    background: var(--black);
+    padding: 100px 5%;
+    overflow: hidden;
+  }
+  .vs-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .vs-h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 0.95;
+    letter-spacing: 1px;
+  }
+  .vs-desc {
+    max-width: 300px;
+    font-size: 14px;
+    color: var(--silver);
+    line-height: 1.7;
+    text-align: right;
+  }
+  .video-frame {
+    position: relative;
+    padding-bottom: 56.25%;
+    background: var(--dark2);
+    overflow: hidden;
+    border: 1px solid rgba(232,0,30,0.15);
+  }
+  .video-frame::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+    z-index: 2;
+  }
+  .video-frame iframe {
+    position: absolute;
+    inset: 0; width: 100%; height: 100%;
+    border: none;
+  }
+  .video-glow {
+    position: absolute; inset: -2px;
+    background: transparent;
+    box-shadow: 0 0 60px rgba(232,0,30,0.15), 0 0 120px rgba(232,0,30,0.06);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* ── Urgency Timer ── */
+  #urgency {
+    background: var(--red);
+    padding: 20px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+  .urgency-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(14px,2vw,18px);
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+  }
+  .timer-blocks {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .timer-block {
+    background: rgba(0,0,0,0.25);
+    padding: 6px 14px;
+    text-align: center;
+    min-width: 56px;
+  }
+  .timer-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    color: #fff;
+    display: block;
+  }
+  .timer-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    display: block;
+  }
+  .timer-sep {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+  }
+
+  /* ── Schedule Section ── */
+  #schedule {
+    background: var(--dark);
+    padding: 80px 5%;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 48px;
+  }
+  .schedule-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    background: var(--dark2);
+    border-left: 2px solid transparent;
+    transition: all 0.3s;
+  }
+  .schedule-row:hover { border-left-color: var(--red); background: rgba(232,0,30,0.05); }
+  .schedule-day {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .schedule-time {
+    font-size: 14px;
+    color: var(--silver);
+    letter-spacing: 0.5px;
+  }
+  .schedule-status {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+  .status-open { color: #22c55e; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); }
+  .status-short { color: var(--red); background: var(--red-dim); border: 1px solid rgba(232,0,30,0.2); }
+
+  .hero-content {
+    position: relative; z-index: 3;
+    padding: 0 5%;
+    max-width: 900px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border: 1px solid rgba(232,0,30,0.4);
+    background: rgba(232,0,30,0.08);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 28px;
+    opacity: 0; transform: translateY(20px);
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pulse-dot 1.5s infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.4; transform:scale(0.6); }
+  }
+
+  .hero-h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 11vw, 140px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0; transform: translateY(40px);
+  }
+  .hero-h1 .accent { color: var(--red); display: block; }
+
+  .hero-sub {
+    font-size: clamp(15px, 2vw, 18px);
+    font-weight: 300;
+    color: rgba(240,240,240,0.65);
+    letter-spacing: 0.5px;
+    line-height: 1.7;
+    max-width: 520px;
+    margin-bottom: 44px;
+    opacity: 0; transform: translateY(30px);
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0; transform: translateY(30px);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 40px;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: all 0.3s;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .btn-primary:hover::before { transform: translateX(100%); }
+  .btn-primary:hover { box-shadow: 0 0 40px var(--red-glow), 0 0 80px rgba(232,0,30,0.15); transform: translateY(-2px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 17px 36px;
+    background: transparent;
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(240,240,240,0.25);
+    cursor: pointer;
+    transition: all 0.3s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+  .btn-secondary:hover { border-color: rgba(240,240,240,0.6); background: rgba(255,255,255,0.05); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-scroll span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, rgba(232,0,30,0.8), transparent);
+    animation: scroll-anim 2s infinite;
+  }
+  @keyframes scroll-anim {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* Section base */
+  section { padding: 100px 5%; }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--red);
+  }
+
+  /* Stats */
+  #stats {
+    background: var(--dark);
+    padding: 60px 5%;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .stat-item {
+    padding: 32px 24px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 2px;
+    background: var(--red);
+    transition: width 0.5s ease;
+  }
+  .stat-item:hover::after { width: 60%; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 6vw, 72px);
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-num span { color: var(--red); }
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+
+  /* Transformation */
+  #transformation {
+    background: var(--black);
+    overflow: hidden;
+  }
+  .transform-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 60px;
+  }
+  .transform-h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 7vw, 90px);
+    line-height: 0.95;
+    letter-spacing: 1px;
+  }
+  .transform-tagline {
+    font-size: 14px;
+    color: var(--silver);
+    max-width: 280px;
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .transform-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 300px 200px;
+    gap: 3px;
+  }
+  .transform-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--dark2);
+  }
+  .transform-card:first-child { grid-row: span 2; }
+  .transform-card .card-bg {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.5) saturate(0.7);
+  }
+  .transform-card:hover .card-bg { transform: scale(1.08); filter: brightness(0.6) saturate(0.9); }
+  .transform-card .card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 60%);
+    z-index: 1;
+  }
+  .transform-card .card-text {
+    position: absolute; bottom: 20px; left: 20px; z-index: 2;
+  }
+  .card-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--white);
+  }
+  /* Gradient backgrounds for transform cards */
+  .bg-lift { background: linear-gradient(135deg, #1a0a0a, #0d0d0d); }
+  .bg-run { background: linear-gradient(135deg, #0a0a1a, #0d0d0d); }
+  .bg-abs { background: linear-gradient(135deg, #0a1a0a, #0d0d0d); }
+  .bg-power { background: linear-gradient(135deg, #1a1a0a, #0d0d0d); }
+  .bg-transform { background: linear-gradient(135deg, #1a0a1a, #0d0d0d); }
+  /* Decorative gym silhouettes */
+  .gym-silhouette {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.12;
+    font-size: 120px;
+    filter: grayscale(1);
+  }
+
+  /* Why Choose */
+  #why {
+    background: var(--dark);
+  }
+  .why-h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    margin-bottom: 60px;
+    letter-spacing: 1px;
+  }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+  .why-card {
+    background: var(--dark2);
+    padding: 44px 32px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid transparent;
+    transition: all 0.4s;
+    cursor: default;
+  }
+  .why-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at top left, var(--red-dim), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .why-card:hover { border-bottom-color: var(--red); transform: translateY(-4px); }
+  .why-card:hover::before { opacity: 1; }
+  .why-icon {
+    width: 48px; height: 48px;
+    margin-bottom: 24px;
+    color: var(--red);
+  }
+  .why-icon svg { width: 100%; height: 100%; }
+  .why-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .why-desc {
+    font-size: 14px;
+    color: var(--silver);
+    line-height: 1.7;
+  }
+
+  /* Pricing */
+  #pricing {
+    background: var(--black);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  #pricing::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(232,0,30,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .pricing-h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .pricing-sub {
+    color: var(--silver);
+    font-size: 16px;
+    margin-bottom: 60px;
+  }
+  .pricing-card {
+    max-width: 540px;
+    margin: 0 auto;
+    background: var(--dark2);
+    border: 1px solid rgba(232,0,30,0.2);
+    padding: 56px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pricing-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+  }
+  .pricing-badge {
+    display: inline-block;
+    padding: 5px 20px;
+    background: var(--red);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .pricing-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 4px;
+    margin-bottom: 4px;
+  }
+  .pricing-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 10vw, 100px);
+    line-height: 1;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+  .pricing-price-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--silver);
+    margin-bottom: 40px;
+    text-transform: uppercase;
+  }
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 44px;
+    text-align: left;
+  }
+  .pricing-features li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 15px;
+    color: rgba(240,240,240,0.8);
+  }
+  .pricing-features li::before {
+    content: '';
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--red);
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--red-dim);
+    position: relative;
+  }
+  .pricing-features li::after {
+    display: none;
+  }
+  .check-icon {
+    width: 18px; height: 18px;
+    background: var(--red-dim);
+    border: 1.5px solid var(--red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .check-icon svg { width: 10px; height: 10px; stroke: var(--red); }
+  .pricing-features li { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 15px; color: rgba(240,240,240,0.8); }
+  .pricing-features li:last-child { border-bottom: none; }
+  .btn-pricing {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-pricing::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+    transform: translateX(-100%);
+    transition: 0.5s;
+  }
+  .btn-pricing:hover::before { transform: translateX(100%); }
+  .btn-pricing:hover { box-shadow: 0 0 50px var(--red-glow); }
+
+  /* Testimonials */
+  #testimonials {
+    background: var(--dark);
+    overflow: hidden;
+  }
+  .testi-h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    margin-bottom: 60px;
+    letter-spacing: 1px;
+  }
+  .testi-track-wrap { overflow: hidden; position: relative; }
+  .testi-track-wrap::before, .testi-track-wrap::after {
+    content: '';
+    position: absolute; top: 0; bottom: 0;
+    width: 100px; z-index: 2;
+    pointer-events: none;
+  }
+  .testi-track-wrap::before { left: 0; background: linear-gradient(to right, var(--dark), transparent); }
+  .testi-track-wrap::after { right: 0; background: linear-gradient(to left, var(--dark), transparent); }
+  .testi-track {
+    display: flex;
+    gap: 20px;
+    animation: slide-testi 30s linear infinite;
+    width: max-content;
+  }
+  .testi-track:hover { animation-play-state: paused; }
+  @keyframes slide-testi {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .testi-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 32px 28px;
+    width: 320px;
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .testi-card:hover { border-color: rgba(232,0,30,0.3); }
+  .testi-stars { color: var(--red); font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
+  .testi-text {
+    font-size: 14px;
+    color: rgba(240,240,240,0.75);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .testi-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .testi-role {
+    font-size: 12px;
+    color: var(--red);
+    letter-spacing: 1px;
+  }
+
+  /* Final CTA */
+  #final-cta {
+    position: relative;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    padding: 100px 5%;
+  }
+  .final-bg {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 100% 80% at 50% 50%, rgba(232,0,30,0.1) 0%, transparent 70%),
+      linear-gradient(180deg, var(--dark) 0%, var(--black) 100%);
+  }
+  .final-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(232,0,30,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,0,30,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  }
+  .final-content { position: relative; z-index: 1; }
+  .final-h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 10vw, 130px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+  .final-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(18px, 3vw, 28px);
+    letter-spacing: 6px;
+    color: var(--silver);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+  .final-sub span { color: var(--red); }
+
+  /* Contact */
+  #contact {
+    background: var(--dark);
+    padding: 50px 5%;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  .contact-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .contact-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+  }
+  .contact-logo span { color: var(--red); }
+  .contact-info {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--silver);
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .contact-item:hover { color: var(--white); }
+  .contact-item svg { width: 16px; height: 16px; stroke: var(--red); flex-shrink: 0; }
+  .contact-copy {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: rgba(138,138,138,0.5);
+    text-transform: uppercase;
+  }
+
+  /* Floating WhatsApp */
+  .wa-float {
+    position: fixed;
+    bottom: 32px; right: 32px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .wa-btn {
+    width: 58px; height: 58px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 4px 24px rgba(37,211,102,0.4);
+    transition: all 0.3s;
+    animation: wa-bounce 3s ease-in-out infinite;
+  }
+  @keyframes wa-bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .wa-btn:hover { transform: scale(1.1) !important; box-shadow: 0 8px 40px rgba(37,211,102,0.6); animation: none; }
+  .wa-btn svg { width: 28px; height: 28px; fill: white; }
+  .wa-tooltip {
+    background: var(--dark2);
+    border: 1px solid rgba(37,211,102,0.3);
+    padding: 5px 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.7);
+    white-space: nowrap;
+    animation: wa-bounce 3s ease-in-out infinite;
+    animation-delay: 0.15s;
+  }
+
+  /* Sticky CTA bar */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 200;
+    background: rgba(8,8,8,0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(232,0,30,0.2);
+    padding: 12px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+  }
+  .sticky-bar.visible { transform: translateY(0); }
+  .sticky-bar-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: rgba(240,240,240,0.7);
+  }
+  .sticky-bar-text strong { color: var(--white); font-size: 18px; }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(40px); }
+  .reveal.visible { opacity: 1; transform: translateY(0); transition: opacity 0.8s ease, transform 0.8s ease; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .transform-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .transform-card:first-child { grid-row: span 1; }
+    .transform-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .transform-tagline { text-align: left; max-width: 100%; }
+    .contact-inner { flex-direction: column; align-items: flex-start; }
+    .vs-header { flex-direction: column; align-items: flex-start; }
+    .vs-desc { text-align: left; max-width: 100%; }
+    .schedule-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .why-grid { grid-template-columns: 1fr; }
+    .transform-grid { grid-template-columns: 1fr; }
+    .hero-btns { flex-direction: column; }
+    .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+    .pricing-card { padding: 40px 24px; }
+    .sticky-bar { flex-direction: column; text-align: center; }
+    .wa-float { bottom: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-logo" id="loaderLogo">TITAN FITNESS CLUB</div>
+  <div class="loader-bar-wrap">
+    <div class="loader-bar" id="loaderBar"></div>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <a href="#hero" class="nav-logo">TITAN <span>FC</span></a>
+  <div class="nav-cta">
+    <a href="https://wa.me/212708818882?text=I'm%20interested%20in%20joining%20Titan%20Fitness%20Club" class="btn-nav" target="_blank">WhatsApp</a>
+    <a href="#pricing" class="btn-nav">Join Now</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-fallback"></div>
+  <div class="hero-grid"></div>
+  <div class="yt-bg-wrap">
+    <iframe src="https://www.youtube.com/embed/I_RYujJvZ7s?autoplay=1&mute=1&loop=1&playlist=I_RYujJvZ7s&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay; encrypted-media" allowfullscreen title="Titan Fitness Hero"></iframe>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-content">
+    <div class="hero-badge" id="heroBadge">✦ Elite Fitness Experience</div>
+    <h1 class="hero-h1" id="heroH1">
+      Build The <span class="accent">Strongest</span> Version Of Yourself
+    </h1>
+    <p class="hero-sub" id="heroSub">An elite fitness experience designed to transform your body, mindset, and discipline.</p>
+    <div class="hero-btns" id="heroBtns">
+      <a href="#pricing" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Join Now For 2999 MAD
+      </a>
+      <a href="https://wa.me/212708818882?text=I'm%20interested%20in%20joining%20Titan%20Fitness%20Club" class="btn-secondary" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Contact On WhatsApp
+      </a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <div class="stat-num"><span class="counter" data-target="5000">0</span><span>+</span></div>
+      <div class="stat-label">Members</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num"><span class="counter" data-target="20">0</span><span>+</span></div>
+      <div class="stat-label">Professional Coaches</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num"><span class="counter" data-target="300">0</span><span>+</span></div>
+      <div class="stat-label">Premium Equipment</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num"><span class="counter" data-target="98">0</span><span>%</span></div>
+      <div class="stat-label">Real Results</div>
+    </div>
+  </div>
+</section>
+
+<!-- Urgency Timer -->
+<div id="urgency">
+  <div class="urgency-text">🔥 Limited Spots This Month — Offer Ends In</div>
+  <div class="timer-blocks">
+    <div class="timer-block">
+      <span class="timer-num" id="tDays">00</span>
+      <span class="timer-label">Days</span>
+    </div>
+    <div class="timer-sep">:</div>
+    <div class="timer-block">
+      <span class="timer-num" id="tHours">00</span>
+      <span class="timer-label">Hours</span>
+    </div>
+    <div class="timer-sep">:</div>
+    <div class="timer-block">
+      <span class="timer-num" id="tMins">00</span>
+      <span class="timer-label">Mins</span>
+    </div>
+    <div class="timer-sep">:</div>
+    <div class="timer-block">
+      <span class="timer-num" id="tSecs">00</span>
+      <span class="timer-label">Secs</span>
+    </div>
+  </div>
+  <a href="https://wa.me/212708818882?text=I%20want%20to%20claim%20my%20spot!" class="btn-nav" target="_blank" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.3);">Claim Your Spot</a>
+</div>
+
+<!-- Video Showcase -->
+<section id="video-showcase">
+  <div class="vs-header reveal">
+    <div>
+      <div class="section-label">Official Video</div>
+      <h2 class="vs-h2">See The<br><span style="color:var(--red)">Experience</span></h2>
+    </div>
+    <p class="vs-desc">This isn't just a gym. It's a lifestyle, a community, and a proven system that transforms ordinary people into elite athletes.</p>
+  </div>
+  <div class="video-frame reveal">
+    <iframe src="https://www.youtube.com/embed/I_RYujJvZ7s?rel=0&modestbranding=1&color=white" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Titan Fitness Club – Official Video"></iframe>
+    <div class="video-glow"></div>
+  </div>
+</section>
+
+<!-- Schedule -->
+<section id="schedule">
+  <div class="section-label reveal">Always Open</div>
+  <h2 class="vs-h2 reveal">Training <span style="color:var(--red)">Hours</span></h2>
+  <div class="schedule-grid">
+    <div class="schedule-row reveal">
+      <span class="schedule-day">Monday – Friday</span>
+      <span class="schedule-time">06:00 – 23:00</span>
+      <span class="schedule-status status-open">Open</span>
+    </div>
+    <div class="schedule-row reveal">
+      <span class="schedule-day">Saturday</span>
+      <span class="schedule-time">07:00 – 22:00</span>
+      <span class="schedule-status status-open">Open</span>
+    </div>
+    <div class="schedule-row reveal">
+      <span class="schedule-day">Sunday</span>
+      <span class="schedule-time">08:00 – 20:00</span>
+      <span class="schedule-status status-short">Short Day</span>
+    </div>
+    <div class="schedule-row reveal">
+      <span class="schedule-day">Public Holidays</span>
+      <span class="schedule-time">09:00 – 18:00</span>
+      <span class="schedule-status status-short">Limited</span>
+    </div>
+  </div>
+</section>
+
+<!-- Transformation -->
+<section id="transformation">
+  <div class="transform-header reveal">
+    <h2 class="transform-h2">Real<br><span style="color:var(--red)">Transformations</span></h2>
+    <p class="transform-tagline">Every physique starts with a decision. These members made theirs.</p>
+  </div>
+  <div class="transform-grid">
+    <div class="transform-card reveal">
+      <div class="card-bg bg-lift">
+        <div class="gym-silhouette">🏋️</div>
+      </div>
+      <div class="card-overlay"></div>
+      <div class="card-text">
+        <span class="card-label">Power</span>
+        <span class="card-name">Strength Training</span>
+      </div>
+    </div>
+    <div class="transform-card reveal">
+      <div class="card-bg bg-run">
+        <div class="gym-silhouette">🏃</div>
+      </div>
+      <div class="card-overlay"></div>
+      <div class="card-text">
+        <span class="card-label">Cardio</span>
+        <span class="card-name">Endurance</span>
+      </div>
+    </div>
+    <div class="transform-card reveal">
+      <div class="card-bg bg-power">
+        <div class="gym-silhouette">💪</div>
+      </div>
+      <div class="card-overlay"></div>
+      <div class="card-text">
+        <span class="card-label">Physique</span>
+        <span class="card-name">Body Sculpt</span>
+      </div>
+    </div>
+    <div class="transform-card reveal">
+      <div class="card-bg bg-abs">
+        <div class="gym-silhouette">🔥</div>
+      </div>
+      <div class="card-overlay"></div>
+      <div class="card-text">
+        <span class="card-label">Definition</span>
+        <span class="card-name">Core Power</span>
+      </div>
+    </div>
+    <div class="transform-card reveal">
+      <div class="card-bg bg-transform">
+        <div class="gym-silhouette">⚡</div>
+      </div>
+      <div class="card-overlay"></div>
+      <div class="card-text">
+        <span class="card-label">Results</span>
+        <span class="card-name">Transformation</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose -->
+<section id="why">
+  <div class="section-label reveal">Why Titan</div>
+  <h2 class="why-h2 reveal">Built For <span style="color:var(--red)">Elite</span></h2>
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="why-title">Elite Equipment</div>
+      <p class="why-desc">State-of-the-art machines and free weights sourced from the world's leading fitness manufacturers.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a9 9 0 0118 0v2"/></svg>
+      </div>
+      <div class="why-title">Expert Coaching</div>
+      <p class="why-desc">Certified performance coaches dedicated to your transformation — from day one to your peak.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <div class="why-title">Powerful Atmosphere</div>
+      <p class="why-desc">An energy-charged environment engineered to push you beyond what you thought possible.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="why-title">Real Transformations</div>
+      <p class="why-desc">Proven protocols. Measurable results. Over 5,000 members who committed and changed everything.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing">
+  <div class="section-label reveal" style="justify-content:center">Membership</div>
+  <h2 class="pricing-h2 reveal">One Price.<br><span style="color:var(--red)">Infinite Power.</span></h2>
+  <p class="pricing-sub reveal">No tiers. No compromises. The full Titan experience.</p>
+  <div class="pricing-card reveal">
+    <div class="pricing-badge">Most Popular</div>
+    <div class="pricing-name">Titan Membership</div>
+    <div class="pricing-price">2999</div>
+    <div class="pricing-price-label">MAD / Month · All Inclusive</div>
+    <ul class="pricing-features">
+      <li>
+        <div class="check-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+        Unlimited Gym Access
+      </li>
+      <li>
+        <div class="check-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+        Professional Coaching
+      </li>
+      <li>
+        <div class="check-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+        Premium Modern Equipment
+      </li>
+      <li>
+        <div class="check-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+        Personalized Training Programs
+      </li>
+      <li>
+        <div class="check-icon"><svg viewBox="0 0 12 12" fill="none" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+        Transformation Support & Tracking
+      </li>
+    </ul>
+    <a href="https://wa.me/212708818882?text=I'm%20ready%20to%20start%20my%20transformation%20at%20Titan%20Fitness%20Club" class="btn-pricing" target="_blank">Start Your Transformation</a>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials">
+  <div class="section-label reveal">Members Speak</div>
+  <h2 class="testi-h2 reveal">Real <span style="color:var(--red)">Results</span></h2>
+  <div class="testi-track-wrap">
+    <div class="testi-track" id="testiTrack">
+      <!-- Cards duplicated for infinite loop -->
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Titan changed my life completely. 3 months in and I lost 18kg. The coaches are relentless and the energy is unlike anything I've experienced."</p>
+        <div class="testi-name">Youssef M.</div>
+        <div class="testi-role">Member · 6 months</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The atmosphere alone is worth every dirham. I've tried 4 gyms in Casablanca. Titan is on a different level — equipment, coaching, results."</p>
+        <div class="testi-name">Salma B.</div>
+        <div class="testi-role">Member · 1 year</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I came in weak. I leave strong. The coaches built my program from scratch and stayed with me every step. Worth every penny."</p>
+        <div class="testi-name">Amine R.</div>
+        <div class="testi-role">Member · 8 months</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Premium equipment, professional team, real results. This is the gym for people serious about changing their bodies. No excuses here."</p>
+        <div class="testi-name">Karim T.</div>
+        <div class="testi-role">Member · 3 months</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"From day one the vibe hit different. Everyone here is serious, the coaches are top-tier, and the results speak louder than any ad."</p>
+        <div class="testi-name">Nadia H.</div>
+        <div class="testi-role">Member · 9 months</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Best investment I've made for my health. The 2999 MAD pays for itself when you see your body change in 6 weeks. Absolutely elite."</p>
+        <div class="testi-name">Omar K.</div>
+        <div class="testi-role">Member · 5 months</div>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Titan changed my life completely. 3 months in and I lost 18kg. The coaches are relentless and the energy is unlike anything I've experienced."</p>
+        <div class="testi-name">Youssef M.</div>
+        <div class="testi-role">Member · 6 months</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The atmosphere alone is worth every dirham. I've tried 4 gyms in Casablanca. Titan is on a different level — equipment, coaching, results."</p>
+        <div class="testi-name">Salma B.</div>
+        <div class="testi-role">Member · 1 year</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I came in weak. I leave strong. The coaches built my program from scratch and stayed with me every step. Worth every penny."</p>
+        <div class="testi-name">Amine R.</div>
+        <div class="testi-role">Member · 8 months</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Premium equipment, professional team, real results. This is the gym for people serious about changing their bodies. No excuses here."</p>
+        <div class="testi-name">Karim T.</div>
+        <div class="testi-role">Member · 3 months</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"From day one the vibe hit different. Everyone here is serious, the coaches are top-tier, and the results speak louder than any ad."</p>
+        <div class="testi-name">Nadia H.</div>
+        <div class="testi-role">Member · 9 months</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Best investment I've made for my health. The 2999 MAD pays for itself when you see your body change in 6 weeks. Absolutely elite."</p>
+        <div class="testi-name">Omar K.</div>
+        <div class="testi-role">Member · 5 months</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section id="final-cta">
+  <div class="final-bg"></div>
+  <div class="final-grid"></div>
+  <div class="final-content">
+    <div class="section-label reveal" style="justify-content:center;margin-bottom:20px">The Decision</div>
+    <h2 class="final-h2 reveal">Your Transformation<br><span style="color:var(--red)">Starts Today</span></h2>
+    <p class="final-sub reveal">Discipline. <span>Strength.</span> Results.</p>
+    <a href="https://wa.me/212708818882?text=I'm%20ready%20to%20join%20Titan%20Fitness%20Club" class="btn-primary reveal" target="_blank" style="display:inline-flex">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Join Titan Fitness Now
+    </a>
+  </div>
+</section>
+
+<!-- Contact -->
+<footer id="contact">
+  <div class="contact-inner">
+    <div class="contact-logo">TITAN <span>FITNESS</span> CLUB</div>
+    <div class="contact-info">
+      <a href="tel:+212708818882" class="contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+        +212 708 818 882
+      </a>
+      <a href="mailto:echchiaa@elbordiji.com" class="contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        echchiaa@elbordiji.com
+      </a>
+    </div>
+    <div class="contact-copy">© 2024 Titan Fitness Club. All Rights Reserved.</div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<div class="wa-float">
+  <div class="wa-tooltip">Chat with us</div>
+  <a href="https://wa.me/212708818882?text=Hello%20Titan%20Fitness%20Club!" class="wa-btn" target="_blank" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+</div>
+
+<!-- Sticky Bar -->
+<div class="sticky-bar" id="stickyBar">
+  <div class="sticky-bar-text">
+    <strong>Titan Fitness Club</strong> — Membership from <strong style="color:var(--red)">2999 MAD</strong>
+  </div>
+  <a href="https://wa.me/212708818882?text=I'm%20interested%20in%20joining%20Titan%20Fitness%20Club" class="btn-primary" target="_blank" style="white-space:nowrap; font-size:14px; padding:12px 28px;">
+    Join Now
+  </a>
+</div>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animCursor() {
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+})();
+document.querySelectorAll('a,button,.why-card,.stat-item').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width='60px'; ring.style.height='60px'; ring.style.borderColor='rgba(232,0,30,0.8)'; });
+  el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; ring.style.borderColor='rgba(232,0,30,0.5)'; });
+});
+
+// Loader
+const loaderLogo = document.getElementById('loaderLogo');
+const loaderBar = document.getElementById('loaderBar');
+const loader = document.getElementById('loader');
+gsap.to(loaderLogo, { opacity: 1, duration: 0.8, ease: 'power2.out' });
+setTimeout(() => { loaderBar.style.width = '100%'; }, 200);
+setTimeout(() => {
+  gsap.to(loader, {
+    opacity: 0, duration: 0.6, ease: 'power2.inOut',
+    onComplete: () => { loader.style.display = 'none'; initAnimations(); }
+  });
+}, 2000);
+
+function initAnimations() {
+  // Hero animations
+  gsap.to('#heroBadge', { opacity:1, y:0, duration:0.8, ease:'power3.out', delay:0.1 });
+  gsap.to('#heroH1', { opacity:1, y:0, duration:1, ease:'power3.out', delay:0.25 });
+  gsap.to('#heroSub', { opacity:1, y:0, duration:0.8, ease:'power3.out', delay:0.45 });
+  gsap.to('#heroBtns', { opacity:1, y:0, duration:0.8, ease:'power3.out', delay:0.6 });
+
+  // Scroll reveals
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 80 * (Array.from(entry.target.parentElement?.children || []).indexOf(entry.target)));
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Counters
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      let start = 0;
+      const duration = 2000;
+      const startTime = performance.now();
+      const easeOut = t => 1 - Math.pow(1 - t, 3);
+      function tick(now) {
+        const elapsed = Math.min((now - startTime) / duration, 1);
+        el.textContent = Math.floor(easeOut(elapsed) * target).toLocaleString();
+        if (elapsed < 1) requestAnimationFrame(tick);
+        else el.textContent = target.toLocaleString();
+      }
+      requestAnimationFrame(tick);
+      counterObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+}
+
+// Sticky bar
+const stickyBar = document.getElementById('stickyBar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 500) stickyBar.classList.add('visible');
+  else stickyBar.classList.remove('visible');
+}, { passive: true });
+
+// Countdown Timer — end of current month
+(function() {
+  const now = new Date();
+  const end = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0);
+  function updateTimer() {
+    const diff = end - new Date();
+    if (diff <= 0) return;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    const pad = n => String(n).padStart(2,'0');
+    document.getElementById('tDays').textContent = pad(d);
+    document.getElementById('tHours').textContent = pad(h);
+    document.getElementById('tMins').textContent = pad(m);
+    document.getElementById('tSecs').textContent = pad(s);
+  }
+  updateTimer();
+  setInterval(updateTimer, 1000);
+})();
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
